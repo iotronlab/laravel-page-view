@@ -33,11 +33,18 @@ trait hasPageView
 
         if ($hasViewed == 0) {
             // Create Record
-            $newPageView = new PageView();
-            $newPageView->ip = $ip;
-            $newPageView->user_agent = $userAgent;
-            $newPageView->session = $session;
-            $this->pageViews()->save($newPageView);
+//            $newPageView = new PageView();
+//            $newPageView->ip = $ip;
+//            $newPageView->user_agent = $userAgent;
+//            $newPageView->session = $session;
+//            $this->pageViews()->save($newPageView);
+
+            $this->pageViews()->create([
+                'ip' => $ip,
+                'user_agent' => $userAgent,
+                'session' => $session,
+            ]);
+
 
             // Update Model View Counter
             $this->views++;
