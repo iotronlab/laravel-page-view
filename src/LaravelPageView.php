@@ -9,28 +9,10 @@ use Illuminate\Http\Request;
 class LaravelPageView
 {
 
-    public static LaravelPageView $pageView;
 
-    public function __construct()
+    public function init():string
     {
-        self::$pageView = $this;
+        return 'Use hasPageView Trait Instead';
     }
-
-    public function attempt(Request $request,Model $model)
-    {
-
-        $user = $request->user();
-        $ip = $request->getClientIp();
-        $session = $request->session()->token();
-
-
-//        $model->pageview();
-
-
-
-    }
-
-
-
 
 }
