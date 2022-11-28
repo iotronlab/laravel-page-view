@@ -37,7 +37,7 @@ trait hasPageView
             and then run:- php artisan migrate');
 
         // Update Model View Counter
-        throw_unless(isset($this->views),'views column not found in'.get_class($this));
+        //throw_unless(isset($this->views),'views column not found in'.get_class($this));
 
         $hasViewed = $this->pageViews()->where(function ($query) use($ip,$session){
             $query->where('ip',$ip)->orWhere('session',$session);
