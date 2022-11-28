@@ -17,7 +17,7 @@ class LaravelPageViewServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('laravel-page-view')
-            ->hasViews()
+            ->hasConfigFile('page-view')
             ->hasMigration('create_page_view_table')
             ->hasCommand(LaravelPageViewCommand::class);
     }

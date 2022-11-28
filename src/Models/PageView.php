@@ -1,7 +1,6 @@
 <?php
 namespace Iotronlab\LaravelPageView\Models;
 
-
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\MassPrunable;
@@ -25,7 +24,7 @@ class PageView extends Model
     /**
      * @return MorphTo
      */
-    public function viewable()
+    public function viewable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -37,9 +36,16 @@ class PageView extends Model
      *
      * @return Builder
      */
-    public function prunable()
+    public function prunable(): Builder
     {
-        return static::where('created_at', '<=', now()->subMonth());
+        $range = config('page-view.range.value') ?? 1;
+        $type = config('page-view.range.type');
+        if($type == 'month' && $range <=12 && $range > 1)
+        {
+            return static::where('created_at', '<=', now()->addMonths($range));
+        }else{
+            return static::where('created_at', '<=', now()->subMonth());
+        }
     }
 
 

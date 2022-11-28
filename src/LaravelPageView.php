@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 
 class LaravelPageView
 {
-
+    public const MONTH ='month';
+    public const YEAR='year';
 
     public function init():string
     {
