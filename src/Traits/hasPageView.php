@@ -24,26 +24,40 @@ trait hasPageView
     /**
      * @param Request $request
      * @return void
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function hasPageViews(Request $request): void
     {
         $ip = $request->getClientIp();
         $session = $request->session()->token();
         $userAgent = $request->userAgent();
-
-
         throw_unless(Schema::hasTable('page_views'),'Did you forget to run:- php artisan vendor:publish --tag="page-view-migrations"
             and then run:- php artisan migrate');
+        $this->setPageViews($ip,$session,$userAgent);
+    }
 
-        // Update Model View Counter
-        //throw_unless(isset($this->views),'views column not found in'.get_class($this));
 
-        $hasViewed = $this->pageViews()->where(function ($query) use($ip,$session){
+    /**
+     * @param string $ip
+     * @param string $session
+     * @return bool
+     * @throws Throwable
+     */
+    public function hasPageView(string $ip,string $session): bool
+    {
+        $hasViewed =  $this->pageViews()->where(function ($query) use($ip,$session){
             $query->where('ip',$ip)->orWhere('session',$session);
         })->count();
+        return $hasViewed == 1;
+    }
 
-        if ($hasViewed == 0) {
+    /**
+     * Update Model View Counter
+     * @throws Throwable
+     */
+    public function setPageViews(string $ip,string $session,string $userAgent): void
+    {
+        if (!$this->hasPageView($ip,$session)) {
             $this->pageViews()->create([
                 'ip' => $ip,
                 'user_agent' => $userAgent,
