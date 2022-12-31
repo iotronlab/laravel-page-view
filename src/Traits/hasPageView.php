@@ -81,12 +81,11 @@ trait hasPageView
 
 
     /**
-     * @param bool $random_dates
      * @param bool $inFuture
      * @return void
      * @throws Throwable
      */
-    public function fakePageViews(bool $random_dates=false,bool $inFuture=false): void
+    public function fakePageViews(bool $inFuture=false): void
     {
         $ip = fake()->ipv4;
         $session = fake()->randomLetter;
@@ -97,17 +96,14 @@ trait hasPageView
                 'session' => $session,
             ];
 
-            if($random_dates)
+            if ($inFuture)
             {
-                if ($inFuture)
-                {
-                    $fakeDate = now()->addDays(fake()->randomDigit())->toDateTime();
-                }else{
-                    $fakeDate = now()->subDays(fake()->randomDigit())->toDateTime();
-                }
-
-                $attributes = array_merge($attributes,['created_at' => $fakeDate, 'updated_at' => $fakeDate]);
+                $fakeDate = now()->addDays(fake()->numberBetween(1,30))->toDateTime();
+            }else{
+                $fakeDate = now()->subDays(fake()->numberBetween(1,30))->toDateTime();
             }
+
+            $attributes = array_merge($attributes,['created_at' => $fakeDate, 'updated_at' => $fakeDate]);
 
 
             $this->pageViews()->create($attributes);
