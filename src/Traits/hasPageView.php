@@ -11,6 +11,7 @@ trait hasPageView
 {
 
     /**
+     * Relation With
      * @return mixed
      * @throws Throwable
      */
@@ -22,6 +23,7 @@ trait hasPageView
     }
 
     /**
+     * Set Page View
      * @param Request $request
      * @return void
      * @throws Throwable
@@ -38,6 +40,7 @@ trait hasPageView
 
 
     /**
+     * Check Page Views Exists
      * @param string $ip
      * @param string $session
      * @return bool
@@ -51,11 +54,16 @@ trait hasPageView
         return $hasViewed == 1;
     }
 
+
     /**
      * Update Model View Counter
+     * @param string $ip
+     * @param string $session
+     * @param string $userAgent
+     * @return void
      * @throws Throwable
      */
-    public function setPageViews(string $ip,string $session,string $userAgent,bool $random_dates=false): void
+    public function setPageViews(string $ip,string $session,string $userAgent): void
     {
         if (!$this->hasPageView($ip,$session)) {
 
@@ -64,10 +72,40 @@ trait hasPageView
                 'user_agent' => $userAgent,
                 'session' => $session,
             ];
+            $this->pageViews()->create($attributes);
+            // Update Current Model Views
+            $this->views++;
+            $this->save();
+        }
+    }
+
+
+    /**
+     * @param bool $random_dates
+     * @param bool $inFuture
+     * @return void
+     * @throws Throwable
+     */
+    public function fakePageViews(bool $random_dates=false,bool $inFuture=false): void
+    {
+        $ip = fake()->ipv4;
+        $session = fake()->randomLetter;
+        if (!$this->hasPageView($ip,$session)) {
+            $attributes = [
+                'ip' => $ip,
+                'user_agent' => fake()->userAgent,
+                'session' => $session,
+            ];
 
             if($random_dates)
             {
-                $fakeDate = now()->addDays(fake()->randomDigit())->toDateTime();
+                if ($inFuture)
+                {
+                    $fakeDate = now()->addDays(fake()->randomDigit())->toDateTime();
+                }else{
+                    $fakeDate = now()->subDays(fake()->randomDigit())->toDateTime();
+                }
+
                 $attributes = array_merge($attributes,['created_at' => $fakeDate, 'updated_at' => $fakeDate]);
             }
 
