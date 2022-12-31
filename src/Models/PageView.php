@@ -17,7 +17,11 @@ class PageView extends Model
     use HasFactory,MassPrunable;
 
     protected $fillable = [
-        'ip','user_agent','session'
+        'ip',
+        'user_agent',
+        'session',
+        'created_at',
+        'updated_at'
     ];
 
 

@@ -55,19 +55,30 @@ trait hasPageView
      * Update Model View Counter
      * @throws Throwable
      */
-    public function setPageViews(string $ip,string $session,string $userAgent): void
+    public function setPageViews(string $ip,string $session,string $userAgent,bool $random_dates=false): void
     {
         if (!$this->hasPageView($ip,$session)) {
-            $this->pageViews()->create([
+            $attributes = [
                 'ip' => $ip,
                 'user_agent' => $userAgent,
                 'session' => $session,
-            ]);
+            ];
+
+            if($random_dates)
+            {
+                $fakeDate = now()->addDays(fake()->randomDigit())->toDateTime()
+                $attributes = array_merge($attributes,['created_at' => $fakeDate, 'updated_at' => $fakeDate]);
+            }
+
+
+            $this->pageViews()->create($attributes);
             // Update Current Model Views
             $this->views++;
             $this->save();
         }
     }
+
+
 
 
 
