@@ -58,6 +58,7 @@ trait hasPageView
     public function setPageViews(string $ip,string $session,string $userAgent,bool $random_dates=false): void
     {
         if (!$this->hasPageView($ip,$session)) {
+
             $attributes = [
                 'ip' => $ip,
                 'user_agent' => $userAgent,
@@ -66,7 +67,7 @@ trait hasPageView
 
             if($random_dates)
             {
-                $fakeDate = now()->addDays(fake()->randomDigit())->toDateTime()
+                $fakeDate = now()->addDays(fake()->randomDigit())->toDateTime();
                 $attributes = array_merge($attributes,['created_at' => $fakeDate, 'updated_at' => $fakeDate]);
             }
 
