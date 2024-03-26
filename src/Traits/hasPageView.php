@@ -74,13 +74,13 @@ trait hasPageView
             ];
             $this->pageViews()->create($attributes);
             // Update Current Model Views
-            $this->views++;
-            $this->save();
+            $this->increment('views');
         }
     }
 
 
     /**
+     * Generate Fake Page Views
      * @param bool $inFuture
      * @return void
      * @throws Throwable
@@ -108,13 +108,36 @@ trait hasPageView
 
             $this->pageViews()->create($attributes);
             // Update Current Model Views
-            $this->views++;
-            $this->save();
+            $this->increment('views');
+
         }
     }
 
 
-
+    /**
+     * Format Model Views
+     * @return int|string
+     */
+    public function getFormattedViewsAttribute()
+    {
+        $value = $this->views;
+        if (is_int($value))
+        {
+            if ($value >= 1000 && $value < 1000000) {
+                $formatted = number_format($value / 1000, 1) . 'K';
+            } elseif ($value >= 1000000 && $value < 1000000000) {
+                $formatted = number_format($value / 1000000, 1) . 'M';
+            } elseif ($value >= 1000000000) {
+                $formatted = number_format($value / 1000000000, 1) . 'B';
+            } elseif ($value >= 1000000000000) {
+                $formatted = number_format($value / 1000000000000, 1) . 'T';
+            } else {
+                $formatted = $value;
+            }
+            return strpos($formatted, '.0') ? str_replace('.0', '', $formatted) : $formatted;
+        }
+        return $value;
+    }
 
 
 
